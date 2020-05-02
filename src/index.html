@@ -10,13 +10,18 @@
 <body>
     
     <div id="container" class="a">123</div>
-    <div class="a">123</div>
-    <div class="a">123</div>
+    <div class="a">456</div>
+    <div class="a">789</div>
 
 </body>
 <script>
-        
-      console.log($(document.getElementById("container")));
-
+    console.log($("#container"));
+    console.log($(".a"));
+    $(document).ready(function(){
+        console.log("dom加载完毕!");
+    })
+    $(function(){
+        console.log("可以重复添加函数!");
+    })
 </script>
 </html>

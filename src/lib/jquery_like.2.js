@@ -5,6 +5,9 @@
   $ = jQuery = function(content,context){
       return new jQuery.fn.init(content,context);
   }
+  
+  //收集函数
+  const fun_list = [];
 
   jQuery.fn = jQuery.prototype = {
       init:function(content,context){
@@ -25,7 +28,7 @@
             jQuery.fn.merge(this,[content]);
             return this;
         }else if(typeof content === "function"){//判端context是不是函数
-
+            fun_list.push(content);
         }
       },
       merge:function(array1,array2){
@@ -41,17 +44,23 @@
             return array1;
         }  
       },
-      ready:function(fn){
-         this[0].addEventListener('DOMContentLoaded', function () {
-            document.removeEventListener('DOMContentLoaded', arguments.callee, false);            
-            fn();
-        }, false);
+      ready:function(fun){
+        fun_list.push(fun);
       } 
   }
 
   jQuery.fn.init.prototype = jQuery.fn;
 
   global.$ = global.jQuery = $;
-
+  
+  function domLoadComplete(){
+    document.addEventListener('DOMContentLoaded', function () {
+        document.removeEventListener('DOMContentLoaded', arguments.callee, false);            
+        fun_list.forEach(function(fn){
+            fn();
+        })
+      }, false);
+  }
+  domLoadComplete();
 }
 )(window)
