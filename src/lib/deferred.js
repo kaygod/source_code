@@ -87,6 +87,7 @@
         }
         item[2].fire.apply(this, Array.prototype.slice.call(arguments));
         promise.state = item[3];
+        dfr.state = item[3];
       };
       promise[item[1]] = function () {
         const array = Array.prototype.slice.call(arguments);
