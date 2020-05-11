@@ -8,9 +8,7 @@
     <script src="./lib/deferred.js"></script>
   </head>
   <body>
-    <div id="container" class="a">123</div>
-    <div class="a">456</div>
-    <div class="a">789</div>
+ 
   </body>
   <script>
     var wait = function () {
@@ -33,8 +31,7 @@
       return dtd;
     };
 
-    $.when(wait())
-      .done(function (msg) {
+      $.when(wait()).done(function (msg) {
         console.log(msg);
       })
       .fail(function () {

@@ -68,8 +68,10 @@
     const arr = [
       ['resolve', 'done', callback('once memory'), 'resolved'],
       ['reject', 'fail', callback('once memory'), 'rejected'],
-      ['progress', 'notify', callback('memory'), 'pending'],
+      ['progress', 'notify', callback('memory')],
     ];
+
+    let state = "pending";
 
     const dfr = {};
 
@@ -77,21 +79,32 @@
       promise(dfr = null) {
         return dfr === null ? promise : extend(dfr, promise);
       },
-      state: 'pending',
+      state(){
+        return state;
+      }
     };
 
     arr.forEach((item) => {
+
+      const stateString = item[3];
+      const list = item[2];
+
+      if(stateString){
+        list.add(function (){
+          state = stateString;
+        })
+      }
+
       dfr[item[0]] = function () {
-        if (promise.state !== 'pending') {
+        if (state !== 'pending') {
           return false;
         }
-        item[2].fire.apply(this, Array.prototype.slice.call(arguments));
-        promise.state = item[3];
-        dfr.state = item[3];
+        list.fire.apply(this, Array.prototype.slice.call(arguments));
       };
+
       promise[item[1]] = function () {
         const array = Array.prototype.slice.call(arguments);
-        array.length > 0 ? item[2].add(array[0]) : null;
+        array.length > 0 ? list.add(array[0]) : null;
         return promise;
       };
     });
