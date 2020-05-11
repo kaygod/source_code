@@ -1,27 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-    <script src="./lib/jquery_like.2.js"></script>
-</head>
-<body>
-    
+    <script src="./lib/deferred.js"></script>
+  </head>
+  <body>
     <div id="container" class="a">123</div>
     <div class="a">456</div>
     <div class="a">789</div>
+  </body>
+  <script>
+    var wait = function () {
+      var dtd = $.Deferred(); // 生成Deferred对象
+      var tasks = function () {
+        dtd.resolve('执行完毕');
+        dtd.resolve('执行完毕');
+        dtd.reject();
+      };
 
-</body>
-<script>
-    console.log($("#container"));
-    console.log($(".a"));
-    $(document).ready(function(){
-        console.log("dom加载完毕!");
-    })
-    $(function(){
-        console.log("可以重复添加函数!");
-    })
-</script>
+      for (i = 0; i < 10; i++) {
+        (() => {
+          var j = i;
+          setTimeout(() => {
+            dtd.progress(j * 10);
+          }, i * 1000);
+        })();
+      }
+      setTimeout(tasks, 10000);
+      return dtd;
+    };
+
+    $.when(wait())
+      .done(function (msg) {
+        console.log(msg);
+      })
+      .fail(function () {
+        console.log('发生了错误');
+      })
+      .notify(function (data) {
+        console.log(data + '%');
+      });
+  </script>
 </html>
