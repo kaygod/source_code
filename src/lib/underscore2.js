@@ -10,7 +10,7 @@
   }
 
   _.prototype.value = function () {
-    return this._wrapped;
+    return this.wrapped;
   };
 
   function chain(obj) {
@@ -50,7 +50,7 @@
       _.prototype[key] = function () {
         const result = [this.wrapped];
         Array.prototype.push.apply(result, arguments);
-        chainResult(this, func.apply(_, result));
+        return chainResult(this, func.apply(_, result));
       };
     });
   }
