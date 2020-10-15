@@ -5,40 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-    <script src="./lib/deferred.js"></script>
+    <script src="./lib/underscore.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .main {
+        width: 1200px;
+        margin: 0 auto;
+        border: 1px solid red;
+        height: 800px;
+        position: relative;
+      }
+    </style>
   </head>
   <body>
- 
+    <div>
+      <div class="top">hello world</div>
+    </div>
   </body>
   <script>
-    var wait = function () {
-      var dtd = $.Deferred(); // 生成Deferred对象
-      var tasks = function () {
-        dtd.resolve('执行完毕');
-        dtd.resolve('执行完毕');
-        dtd.reject();
-      };
-
-      for (i = 0; i < 10; i++) {
-        (() => {
-          var j = i;
-          setTimeout(() => {
-            dtd.progress(j * 10);
-          }, i * 1000);
-        })();
-      }
-      setTimeout(tasks, 10000);
-      return dtd;
-    };
-
-      $.when(wait()).done(function (msg) {
-        console.log(msg);
+    const result = _([1, 2, 3, 4, 5, 6])
+      .chain()
+      .map((item) => {
+        return item * 2;
       })
-      .fail(function () {
-        console.log('发生了错误');
+      .filter((item) => {
+        return item > 10;
       })
-      .notify(function (data) {
-        console.log(data + '%');
-      });
+      .value();
+    console.log(result);
   </script>
 </html>

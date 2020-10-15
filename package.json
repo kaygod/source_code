@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "jquery": "^3.4.1",
-    "ueditor": "^1.2.3"
+    "ueditor": "^1.2.3",
+    "underscore": "^1.11.0"
   }
 }
