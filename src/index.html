@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-    <script src="./lib/underscore2.js"></script>
     <style>
       * {
         margin: 0;
@@ -26,15 +25,36 @@
     </div>
   </body>
   <script>
-    const result = _([1, 2, 3, 4, 5, 6, 7])
-      .chain()
-      .map((item) => {
-        return item * 2;
-      })
-      .filter((item) => {
-        return item > 10;
-      })
-      .value();
-    console.log(result);
+    function randomValue(max, min) {
+      if (min == null) {
+        min = 0;
+      }
+      return parseInt(Math.random() * (max - min + 1)) + min;
+    }
+    function extend(new_obj, old_obj) {
+      for (let key in old_obj) {
+        new_obj[key] = old_obj[key];
+      }
+      return new_obj;
+    }
+    function sample(array, n) {
+      if (n == null) {
+        return array(randomValue(array.length));
+      }
+      const new_array = Array.isArray(array)
+        ? array.slice()
+        : extend({}, array);
+      const len = new_array.length;
+      const count = Math.min(n, len);
+      for (i = 0; i < count; i++) {
+        const idx = randomValue(i + 1, len - 1);
+        let tmp = new_array[i];
+        new_array[i] = new_array[idx];
+        new_array[idx] = tmp;
+      }
+      return new_array;
+    }
+
+    console.log(sample([1, 2, 3, 4, 5, 6, 7], 5));
   </script>
 </html>
