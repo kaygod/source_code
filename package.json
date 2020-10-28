@@ -10,13 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-<<<<<<< HEAD
     "jquery": "^3.4.1",
     "ueditor": "^1.2.3",
     "underscore": "^1.11.0"
-=======
-    "jquery": "^3.5.1",
-    "ueditor": "^1.2.3"
->>>>>>> 12
   }
 }
