@@ -21,16 +21,14 @@
     </style>
   </head>
   <body>
-    <div>
+    <div class="main">
       <div class="top"></div>
     </div>
   </body>
   <script>
-    const fun = throttle(function (value) {
-      return value;
+   window.onscroll =  throttle(function (value) {
+      console.log("移动了");
     }, 1000);
-    console.log(fun(123));
-    console.log(fun(456));
-    console.log(fun(789));
+   
   </script>
 </html>

@@ -10,13 +10,13 @@ function throttle(fn, wait, params) {
   if (params == null) {
     params = {};
   }
-  function exec(args, now_time) {
+  function exec(args) {
     if (timer) {
       clearTimeout(timer);
       timer = null;
     }
     result = fn.apply(null, args);
-    last_time = now_time;
+    last_time = new Date().getTime();
   }
 
   return function () {
@@ -33,11 +33,11 @@ function throttle(fn, wait, params) {
 
     if (remain <= 0) {
       //已经到了间隔时间,可以立即执行该函数
-      exec(args, now_time);
+      exec(args);
     } else if (!timer && params.trailing !== false) {
       //延迟执行
       timer = setTimeout(() => {
-        exec(args, now_time);
+        exec(args);
       }, remain);
     }
     return result;
