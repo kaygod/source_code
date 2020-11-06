@@ -31,6 +31,8 @@ function throttle(fn, wait, params) {
 
     const args = arguments;
 
+    console.log(remain);
+
     if (remain <= 0) {
       //已经到了间隔时间,可以立即执行该函数
       exec(args);
