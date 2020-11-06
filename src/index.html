@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-    <script src="./lib/throttle.js"></script>
+    <script src="./lib/debounce.js"></script>
     <style>
       * {
         margin: 0;
@@ -14,21 +14,19 @@
       .main {
         width: 1200px;
         margin: 0 auto;
-        border: 1px solid red;
-        height: 800px;
         position: relative;
-        height: 2000px;
       }
     </style>
   </head>
   <body>
     <div class="main">
-      <div class="top"></div>
+      <div class="top"><input type="text" id="user_name" /></div>
     </div>
   </body>
   <script>
-    window.onscroll = throttle(function (value) {
-      console.log('移动了鼠标');
-    }, 1000);
+    const user_name = document.getElementById('user_name');
+    user_name.oninput = debounce(function () {
+      console.log(`输入了${user_name.value},发送给后台模糊查询`);
+    }, 500);
   </script>
 </html>
