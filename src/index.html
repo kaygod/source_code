@@ -4,8 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="./lib/compiler2.js"></script>
+    <script src="./lib/underscore.js"></script>
     <title>Document</title>
+    <<<<<<< HEAD
     <script src="./lib/test.js"></script>
+    ======= >>>>>>> 完成模板引擎
     <style>
       * {
         margin: 0;
@@ -19,22 +23,25 @@
       }
     </style>
   </head>
+
   <body>
     <div class="main">
-      <div class="top" style="display:none"></div>
+      <div class="top" style="display: none"></div>
     </div>
   </body>
   <script>
-  new Promise((resolve)=>{
-    console.log(1)
-	resolve();
-}).then(()=>{
-    console.log(2);
-}).then(()=>{
-    console.log(3);
-}).then(()=>{
-    console.log(4);
-})
-
+    new Promise((resolve) => {
+      console.log(1);
+      resolve();
+    })
+      .then(() => {
+        console.log(2);
+      })
+      .then(() => {
+        console.log(3);
+      })
+      .then(() => {
+        console.log(4);
+      });
   </script>
 </html>

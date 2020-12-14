@@ -22,7 +22,7 @@ function throttle(fn, wait, params) {
   return function () {
     let now_time = new Date().getTime(); //now_time本次运行该函数时的时间戳
 
-    if (last_time === 0 && params.leading === false) {
+    if (!timer && params.leading === false) {
       //让第一次不立即执行,延迟后再执行
       last_time = now_time;
     }

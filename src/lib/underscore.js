@@ -2,16 +2,16 @@
   typeof exports === 'object' && typeof module !== 'undefined'
     ? (module.exports = factory())
     : typeof define === 'function' && define.amd
-    ? define('underscore', factory)
-    : ((global = global || self),
-      (function () {
-        var current = global._;
-        var exports = (global._ = factory());
-        exports.noConflict = function () {
-          global._ = current;
-          return exports;
-        };
-      })());
+      ? define('underscore', factory)
+      : ((global = global || self),
+        (function () {
+          var current = global._;
+          var exports = (global._ = factory());
+          exports.noConflict = function () {
+            global._ = current;
+            return exports;
+          };
+        })());
 })(this, function () {
   //     Underscore.js 1.11.0
   //     https://underscorejs.org
@@ -595,7 +595,7 @@
 
   // Create a naked function reference for surrogate-prototype-swapping.
   function ctor() {
-    return function () {};
+    return function () { };
   }
 
   // An internal function for creating a new object that inherits from another.
@@ -750,12 +750,12 @@
   }
 
   // Predicate-generating function. Often useful outside of Underscore.
-  function noop() {}
+  function noop() { }
 
   // Generates a function for a given object that returns a given property.
   function propertyOf(obj) {
     if (obj == null) {
-      return function () {};
+      return function () { };
     }
     return function (path) {
       return !isArray(path) ? obj[path] : deepGet(obj, path);
