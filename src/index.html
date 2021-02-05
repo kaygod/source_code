@@ -1,47 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="myapp">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <script src="./lib/compiler2.js"></script>
-    <script src="./lib/underscore.js"></script>
-    <title>Document</title>
-    <<<<<<< HEAD
-    <script src="./lib/test.js"></script>
-    ======= >>>>>>> 完成模板引擎
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-      }
-      .main {
-        width: 1200px;
-        margin: 0 auto;
-        height: 800px;
-        position: relative;
-      }
-    </style>
+    <script src="./lib/angular.js"></script>
+    <script src="./lib/angular_test.js"></script>
   </head>
-
   <body>
-    <div class="main">
-      <div class="top" style="display: none"></div>
+    <div ng-controller="contrl">
+      <div>姓名:{{name}}</div>
+      <div>{{intro}}</div>
+      <button class="btn" ng-click="clickHandler()">点击</button>
     </div>
   </body>
-  <script>
-    new Promise((resolve) => {
-      console.log(1);
-      resolve();
-    })
-      .then(() => {
-        console.log(2);
-      })
-      .then(() => {
-        console.log(3);
-      })
-      .then(() => {
-        console.log(4);
-      });
-  </script>
 </html>
