@@ -15389,8 +15389,14 @@
            expect(scope.counter).toEqual(2);
        * ```
        *
-       */
-          $digest: function () {
+       *//**
+        * 
+        * 
+       /**
+        * 
+        * 
+        */
+       $digest: function () {
             var watch,
               value,
               last,
@@ -15450,7 +15456,7 @@
                           (value = watch.get(current)) !== //将$scope传进入,得到最新的value值,原来的值是保存在watch中的
                             (last = watch.last) &&
                           !(watch.eq
-                            ? equals(value, last)
+                            ? equals(value, last) // 害怕值的类型是对象或数组,那么就要进行深层次的比较
                             : typeof value === 'number' &&
                               typeof last === 'number' &&
                               isNaN(value) &&
@@ -15466,7 +15472,7 @@
                             last === initWatchVal ? value : last,
                             current
                           );
-                          if (ttl < 5) {
+                          if (ttl < 5) { //防止一直嵌套调用
                             //ttl的初始值是10
                             logIdx = 4 - ttl;
                             if (!watchLog[logIdx]) watchLog[logIdx] = [];
@@ -15498,7 +15504,15 @@
                 // Insanity Warning: scope depth-first traversal
                 // yes, this code is a bit crazy, but it works and we have tests to prove it!
                 // this piece should be kept in sync with the traversal in $broadcast
-                //这里我判断应该为了支持模块的嵌套,如果存在有嵌套子模块,就把子模块取出来继续更新它的所有lisenter
+                //在angular中,一个模块对应一个rootScope,一个controller对应一个rootScope子级的scope.一个自定义指令对应一个controller的子级scope.
+                
+                /*
+                 *  这段代码我终于看懂了.父级的scope只存储第一个子级$$childHead,和最后一个子级$$childTail
+                    还有的下一个兄弟scope $$nextSibling
+                    首先判端父级有没有$$childHead,有直接遍历渲染第一个子级.如果子级没有子级了,就开始渲染它的兄弟scope.
+                    照着这样的渲染机制就能将整个scope树全部渲染一遍.
+                */
+                
                 if (
                   !(next =
                     current.$$childHead ||
@@ -15508,7 +15522,7 @@
                     current !== target &&
                     !(next = current.$$nextSibling)
                   ) {
-                    current = current.$parent;
+                    current = current.$parent; //这里一开始想不通,为什么涉及到$parent.这是子级的scope渲染完毕可以向上回溯渲染父级的兄弟scope
                   }
                 }
               } while ((current = next));
