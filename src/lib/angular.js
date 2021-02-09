@@ -7314,6 +7314,7 @@
 
             //这个$linkNode是闭包存储下来的节点,它可能html,可以能是li,也可能是p标签
             //现在要把这个节点塞到html中去,比如ng-repeat,ng-if存在值时,就会有把带有状态标识的dom插入到文档中.ng-if为false,publicLinkFn根本不会触发
+            //这个cloneConnectFn里面关联的是自定义指令操作的dom的方法
             if (cloneConnectFn) cloneConnectFn($linkNode, scope);
 
             if (compositeLinkFn)
@@ -7323,6 +7324,7 @@
                 $linkNode,
                 parentBoundTranscludeFn
               );
+
             return $linkNode;
           };
         }
@@ -7354,7 +7356,33 @@
          *        needed so that the jqLite collection items can be replaced with widgets.
          * @param {number=} maxPriority Max directive priority.
          * @returns {Function} A composite linking function of all of the matched directives or null.
+         
+          compileNodes这个函数的作用就是扫描整个dom节点,获取节点上的指令列表.然后将指令和dom建立链接生成节点的链接函数nodeLinkFn.
+
+          如果当前节点存在子节点又递归调用compilNodes生成链接函数childLinkFn
+
+          将 nodeLinkFn 和 childLinkFn 和 当前节点的索引存储到 linkFns 中,并返回一个闭包函数 compositeLinkFn.
+
+          这个 compositeLinkFn 是跟着 compileNodes 走的.
+
+          有点乱,假设当前nodeList开始遍历,它只有一个div,i为0.通过收集该div上面的指令和dom元素生成nodeLinkFn.因为该div存在几个子集,它就把所有子集作为参数再一次调用compileNodes
+
+          生成 childLinkFn. 将i,nodeLinkFn和childLinkFn 塞入linkFns数组中.然后返回一个函数 compositeLinkFn.这个 compositeLinkFn 里面获取到的linkFns数组就只会存储3个元素.
+
+          上面是最外层的情况,现在我们把视野推到获取 childLinkFn 的递归调用 compileNodes 的过程,一探遍历子集时到底发生了什么事情.
+
+          此时nodeList等于父div下面的几个子div元素,transcludeFn对应着父div的链接函数.显示开始遍历nodeList了,按照老规矩还是先收集每个子div的指令级,再将指令和dom结合生成子div的
+
+          nodeLinkFn.但由于该div没有子集所以它的childLinkFn为null,nodeList都循环完毕后,此时的linkFns就存储了好几个子div的index,nodeLinkFn和childLinkFn.函数的结尾返回的是
+
+          compositeLinkFn的函数,记住此时compositeLinkFn里面引用的linkFns就不是最上层的那三个元素了,而是那好几个div一起组合的元素了.
+
+          现在我们再回到最上层.最上层的值是 [index,nodeLinkFn,childLinkFn].index是索引这是没有问题的,nodeLinkFn是当前dom和指令链接后的函数也没有疑问.第三个参数childLinkFn是第二层
+
+          几个子div遍历计算构建返回的compositeLinkFn函数,这个compositeLinkFn函数它里面引用的linkFns是那几个子div一起组合而来的数据.
+         
          */
+
         function compileNodes(
           nodeList,
           transcludeFn,
@@ -7421,7 +7449,7 @@
                   );
 
             if (nodeLinkFn || childLinkFn) {
-              linkFns.push(i, nodeLinkFn, childLinkFn);
+              linkFns.push(i, nodeLinkFn, childLinkFn); //linkFns会存储当前节点的索引,当前节点和子节点
               linkFnFound = true;
               nodeLinkFnFound = nodeLinkFnFound || nodeLinkFn;
             }
@@ -7767,6 +7795,9 @@
          * @param {Object} previousCompileContext Context used for previous compilation of the current
          *                                        node
          * @returns {Function} linkFn
+         *
+         *  这个函数十分关键,它直接将指令上链接函数添加给dom.
+         *
          */
         function applyDirectivesToNode(
           directives,
@@ -8024,6 +8055,7 @@
               );
               ii = directives.length;
             } else if (directive.compile) {
+              //这个是最关键的一句,拿出指令的编译方法linkFn.并使用addLinkFns将linkFn添加到队列中.对节点生成link函数的时候正是从队列中取出linkFn
               try {
                 linkFn = directive.compile(
                   $compileNode,
@@ -8154,6 +8186,14 @@
             return value;
           }
 
+          /**
+           * 最后所有节点的链接都会回到这个函数来.节点链接到底会发生些什么.
+           * @param {*} childLinkFn
+           * @param {*} scope
+           * @param {*} linkNode
+           * @param {*} $rootElement
+           * @param {*} boundTranscludeFn
+           */
           function nodeLinkFn(
             childLinkFn,
             scope,
@@ -8185,6 +8225,7 @@
 
             transcludeFn = boundTranscludeFn && controllersBoundTransclude;
             if (controllerDirectives) {
+              //处理ng-controller的情况
               // TODO: merge `controllers` and `elementControllers` into single object.
               controllers = {};
               elementControllers = {};
@@ -8206,6 +8247,7 @@
                   controller = attrs[directive.name];
                 }
 
+                //通过解析出ng-controller指令,构建了controller实例
                 controllerInstance = $controller(
                   controller,
                   locals,
@@ -8356,6 +8398,7 @@
               );
             }
             if (controllers) {
+              //发现如果是controller指令,就要执行初始化controller的操作.
               forEach(controllers, function (controller) {
                 controller();
               });
@@ -8400,6 +8443,14 @@
                 boundTranscludeFn
               );
             // POSTLINKING
+
+            /**
+             *
+             * 这是该函数的核心了,postLinkFns存的是自定义指令对该节点的处理方式.invokeLinkFn就会执行这个自定义指令里面定义的方式linkFn,linkFn
+             * 里面的核心代码逻辑就是执行$scope.$watch("function(){}",操作dom的回调函数).这里最关键的的一点就是要把$element传进去.
+             *
+             */
+
             for (i = postLinkFns.length - 1; i >= 0; i--) {
               linkFn = postLinkFns[i]; //这是一个修改文本内容的函数
               invokeLinkFn(
@@ -8420,6 +8471,11 @@
 
             // This is the function that is injected as `$transclude`.
             // Note: all arguments are optional!
+            /**
+             *
+             * 这个一个注入 `$transclude` 的函数.这个函数到底有什么用.
+             *
+             */
             function controllersBoundTransclude(
               scope,
               cloneAttachFn,
