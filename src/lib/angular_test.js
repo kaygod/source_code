@@ -1,11 +1,6 @@
 angular.module('myapp', []).controller('contrl', function ($scope) {
-  $scope.intro = 'hello  world';
-  $scope.name = 'kay';
-  $scope.clickHandler = function () {
-    console.log($scope);
+  $scope.name = 'hello world';
+  $scope.clickHanlder = function () {
+    $scope.name = $scope.name + '!';
   };
-  $scope.list = [1, 2, 3];
-  $scope.$watch('list', function () {
-    console.log(123);
-  });
 });

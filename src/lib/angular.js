@@ -13130,7 +13130,7 @@
       value.literal = !!value.literal;
       value.constant = !!value.constant;
 
-      return value;
+      return value; //返回的是一个函数
     },
 
     primary: function () {
@@ -15393,7 +15393,13 @@
             }
 
             return this.$watch(changeDetector, $watchCollectionAction);
-          },
+          } /**
+        * 
+        * 
+       /**
+        * 
+        * 
+        */,
 
           /**
        * @ngdoc method
@@ -15445,14 +15451,7 @@
            expect(scope.counter).toEqual(2);
        * ```
        *
-       *//**
-        * 
-        * 
-       /**
-        * 
-        * 
-        */
-       $digest: function () {
+       */ $digest: function () {
             var watch,
               value,
               last,
@@ -15528,7 +15527,8 @@
                             last === initWatchVal ? value : last,
                             current
                           );
-                          if (ttl < 5) { //防止一直嵌套调用
+                          if (ttl < 5) {
+                            //防止一直嵌套调用
                             //ttl的初始值是10
                             logIdx = 4 - ttl;
                             if (!watchLog[logIdx]) watchLog[logIdx] = [];
@@ -15561,14 +15561,14 @@
                 // yes, this code is a bit crazy, but it works and we have tests to prove it!
                 // this piece should be kept in sync with the traversal in $broadcast
                 //在angular中,一个模块对应一个rootScope,一个controller对应一个rootScope子级的scope.一个自定义指令对应一个controller的子级scope.
-                
+
                 /*
                  *  这段代码我终于看懂了.父级的scope只存储第一个子级$$childHead,和最后一个子级$$childTail
                     还有的下一个兄弟scope $$nextSibling
                     首先判端父级有没有$$childHead,有直接遍历渲染第一个子级.如果子级没有子级了,就开始渲染它的兄弟scope.
                     照着这样的渲染机制就能将整个scope树全部渲染一遍.
                 */
-                
+
                 if (
                   !(next =
                     current.$$childHead ||

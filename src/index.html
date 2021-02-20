@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myapp">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <script src="./lib/angular.js"></script>
+    <script src="./lib/angular-route.js"></script>
     <script src="./lib/angular_test.js"></script>
   </head>
-
-  <body>
-    <div ng-controller="contrl"></div>
+  <body ng-app="myapp">
+    <div ng-controller="contrl">
+      <div ng-click="clickHanlder()">{{name}}</div>
+    </div>
   </body>
 </html>
