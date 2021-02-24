@@ -2,13 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script src="./lib/angular.js"></script>
-    <script src="./lib/angular-route.js"></script>
-    <script src="./lib/angular_test.js"></script>
+    <script src="./lib/Parser.js"></script>
   </head>
-  <body ng-app="myapp">
-    <div ng-controller="contrl">
-      <div ng-click="clickHanlder()">{{name}}</div>
-    </div>
-  </body>
+  <body></body>
+  <script>
+    var data = {
+      num: 1,
+      price: [
+        {
+          value: 60,
+        },
+      ],
+    };
+
+    var template = '<div>{{ -1*price[0].value && 12+(8*!6-num) }}</div>'; // 11
+
+    const compiler = new Parser(template);
+
+    console.log(compiler.parse(data)); //<div>11</div>
+  </script>
 </html>
