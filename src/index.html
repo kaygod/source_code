@@ -13,12 +13,19 @@
           value: 60,
         },
       ],
+      info: { brand: '品牌' },
     };
 
-    var template = '<div>{{ -1*price[0].value && 12+(8*!6-num) }}</div>'; // 11
+    var template1 = '<div>{{ -1*price[0].value && 12+(8*!6-num)*10+2 }}</div>';
 
-    const compiler = new Parser(template);
+    var template2 =
+      '<div> hello world <p>{{"世界" + info.brand + (num*price[0].value+100/(num+1)) + "强"}}</p> </div>';
 
-    console.log(compiler.parse(data)); //<div>11</div>
+    const compiler1 = new Parser(template1);
+
+    const compiler2 = new Parser(template2);
+
+    console.log(compiler1.parse(data)); //<div>4</div>
+    console.log(compiler2.parse(data)); //<div> hello world <p>世界品牌110强</p> </div>
   </script>
 </html>
