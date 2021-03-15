@@ -153,27 +153,23 @@ class Parser {
 
     result = this.bracketHanlder(result);
 
-    // 第五步 处理 '[' 和 ']'
+    // 第五步 处理 '[' 和 ']' 和 '.'
 
-    result = this.squreBracketHanlder(result);
+    this.squreBracketHanlder(result);
 
-    // 第六步 处理 "."
-
-    result = this.dotHandler(result);
-
-    // 第七步 处理 "!"
+    // 第六步 处理 "!"
 
     result = this.exclamationHandler(result);
 
-    // 第八步 处理 "*","/","%"
+    // 第七步 处理 "*","/","%"
 
     this.superiorClac(result);
 
-    // 第九步 处理 "+" 和 "-"
+    // 第八步 处理 "+" 和 "-"
 
     this.basicClac(result);
 
-    // 第十步 处理 "&", "|" 和 "="
+    // 第九步 处理 "&", "|" 和 "="
 
     this.logicClac(result);
 
@@ -289,10 +285,10 @@ class Parser {
   /**
    *  处理 "."
    */
-  dotHandler(data) {
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].exp === '.') {
-        const de_array = data.splice(i - 1, 3); //删掉的三个元素
+  dotHandler(data,i) {
+        //删掉的三个元素
+        const de_array = data.splice(i - 1, 3);
+        // 添加新元素 
         const left = de_array[0].getValue
           ? de_array[0].getValue
           : de_array[0].exp;
@@ -302,35 +298,35 @@ class Parser {
           catagory: 'dot',
           left,
           right,
-          getValue(scope) {
+          getValue:(scope)=>{
             const val = typeof left === 'function' ? left(scope) : left;
             if (de_array[0].isConstants) {
               // 判断是小数
               return Number(val + '.' + right);
             }
             if (typeof val === 'string') {
-              // val属于状态
-              return scope[val][right];
+              if(this.isConstant(val)){
+                 //仍然是小数
+                return Number(val + '.' + right);  
+              }else{
+                // val属于状态
+                return scope[val][right]; 
+              }
             } else {
               // val是表达式计算出来的值
               return val[right];
             }
           },
         });
-        i -= 1;
-      }
-    }
-    return data;
   }
 
   /**
-   * 处理中括号
+   *  处理中括号 [] 和 .
    */
-  squreBracketHanlder(data) {
-    let start_index = null,
-      count = 0;
+  squreBracketHanlder(data){
 
-    const indexArray = [];
+    let start_index = null,
+    count = 0;
 
     for (let i = 0; i < data.length; i++) {
       if (data[i].exp === '[') {
@@ -342,46 +338,43 @@ class Parser {
           count++;
         }
       }
-      if (data[i].exp === ']') {
+      else if (data[i].exp === ']') {
         count--;
         if (count == 0) {
-          //结尾了
-          indexArray.push([start_index, i]);
+          //中括号结尾了
+        
+          //删除元素
+          const extra = data.splice(start_index-1,i-start_index+2);
+          //添加新元素
+          const left = extra[0].getValue?extra[0].getValue:extra[0].exp;
+          const right = extra.slice(2,extra.length-1).reduce((cur, next) => {
+            return cur + next.exp;
+          }, '');
+          data.splice(start_index-1,0,{
+            type:"state",
+            category:"array",
+            left,
+            right,
+            getValue:(scope)=>{
+              if(typeof left === "object"){
+                return left[this.deepParse(right)(scope)];
+              } else if(typeof left === "function"){
+                return left(scope)[this.deepParse(right)(scope)];
+              }
+              else{
+                return scope[left][this.deepParse(right)(scope)];
+              }
+            }
+          })
+          // 修正索引
+          i = start_index - 2;
           start_index = null;
         }
-      }
+      }else if(data[i].exp === '.'){
+          this.dotHandler(data,i);
+          i -= 1;   
+      }    
     }
-
-    let result = [],
-      last = 0; //结果集
-
-    indexArray.forEach((value) => {
-      const [start, end] = value;
-
-      result = result.concat(data.slice(last, start - 1));
-
-      const left = data[start - 1].exp;
-
-      const right = data.slice(start + 1, end).reduce((cur, next) => {
-        return cur + next.exp;
-      }, '');
-
-      result.push({
-        type: 'state',
-        catagory: 'array',
-        left,
-        right,
-        getValue: (scope) => {
-          return scope[left][this.deepParse(right)(scope)];
-        },
-      });
-
-      last = end + 1;
-    });
-
-    result = result.concat(data.slice(last));
-
-    return indexArray.length > 0 ? result : data;
   }
 
   /**

@@ -2,30 +2,68 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script src="./lib/Parser.js"></script>
+    <style>
+      *{
+        margin:0;
+        padding:0;
+      }
+      .main{
+        margin:0 auto;
+        width:960px;
+      }
+
+      .rect{
+        width:100%;
+        height:600px;
+        position: relative;
+      }
+
+      .block{
+         width:20%;
+         height:400px;
+         overflow: hidden;
+         border:1px solid #eee;
+         transform-style: preserve-3d;
+         perspective: 500px;
+         position: relative;
+      }
+
+      .left,.right,.front,.up{
+        width:100%;
+        height:400px;
+        position: absolute;
+        left:0;
+        top:0;
+      }
+
+      .left{
+        transform: translateX(0px) rotateY(90deg);
+        background-color: #333;
+         transform-origin: 0% 0%;
+      }
+
+    </style>  
   </head>
-  <body></body>
+  <body>
+     
+    <div class="main">
+
+
+        <div class="rect">
+
+            <div class="block">
+                <div class="left"></div>
+                <div class="right"></div>
+                <div class="front"></div>
+                <div class="up"></div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+  </body>
   <script>
-    var data = {
-      num: 1,
-      price: [
-        {
-          value: 60,
-        },
-      ],
-      info: { brand: '品牌' },
-    };
-
-    var template1 = '<div>{{ -1*price[0].value && 12+(8*!6-num)*10+2 }}</div>';
-
-    var template2 =
-      '<div> hello world <p>{{"世界" + info.brand + (num*price[0].value+100/(num+1)) + "强"}}</p> </div>';
-
-    const compiler1 = new Parser(template1);
-
-    const compiler2 = new Parser(template2);
-
-    console.log(compiler1.parse(data)); //<div>4</div>
-    console.log(compiler2.parse(data)); //<div> hello world <p>世界品牌110强</p> </div>
   </script>
 </html>

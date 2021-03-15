@@ -14918,7 +14918,7 @@
 
             parent = parent || this;
 
-            if (isolate) {
+            if (isolate) { //这里应该是创建rootScope
               child = new Scope();
               child.$root = this.$root;
             } else {
