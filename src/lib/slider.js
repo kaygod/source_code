@@ -6,6 +6,7 @@ function Slider(options) {
   this.index = 0;
   this.transition_time = options.transition_time || 0.25; //动画时间
   this.transition_delay = options.transition_delay || 0.2; //间隔时间
+  this.mode = options.mode || "flat";
   this.init();
   this.count = 0;
 }
@@ -52,9 +53,13 @@ Slider.prototype.autoScroll = function () {
 
     const src = $('img', this.eles[index])[0].getAttribute('src');
 
-    this.render(src);
+    const render = this.mode + "Render";  //获取渲染函数
 
-    this.execAnimate(); //执行动画
+    const animateFun = this.mode + "Animate"; // 获取动画函数
+
+    this[render](src);
+
+    this[animateFun](); //执行动画
   }
   setInterval(Handler.bind(this), this.time);
 };
@@ -62,7 +67,10 @@ Slider.prototype.autoScroll = function () {
 /**
  *  渲染图形
  */
-Slider.prototype.render = function (src) {
+Slider.prototype.flatRender = function (src) {
+
+  this.clearHtml();
+
   let html = '';
 
   Array.from(Array(this.slice_num)).forEach((v, i) => {
@@ -95,11 +103,12 @@ Slider.prototype.render = function (src) {
 /**
  * 执行动画
  */
-Slider.prototype.execAnimate = async function () {
+Slider.prototype.flatAnimate = async function () {
   const eles = $('.hook div', this.el);
   await Delay(0);
   eles.forEach((el) => {
     el.style.top = 0; //启动动画
+    console.log("绑定了");
     el.addEventListener('transitionend', this.completeAnimate.bind(this));
   });
 };
@@ -109,15 +118,21 @@ Slider.prototype.execAnimate = async function () {
  */
 Slider.prototype.completeAnimate = function () {
   this.count++;
+  console.log(this.count,this.slice_num);
   if (this.count >= this.slice_num) {
     //所有切块都已完成
     this.count = 0;
     this.eles[this.new_index].style.display = 'block';
     this.eles[this.index].style.display = 'none';
     this.index = this.new_index;
-    const elements = $('.hook', this.el);
-    elements.forEach((element) => {
-      this.el.removeChild(element);
-    });
+    this.clearHtml();
   }
 };
+
+
+Slider.prototype.clearHtml = function(){
+  const elements = $('.hook', this.el);
+  elements.length > 0 && elements.forEach((element) => {
+    this.el.removeChild(element);
+  });
+}
