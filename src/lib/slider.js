@@ -108,7 +108,6 @@ Slider.prototype.flatAnimate = async function () {
   await Delay(0);
   eles.forEach((el) => {
     el.style.top = 0; //启动动画
-    console.log("绑定了");
     el.addEventListener('transitionend', this.completeAnimate.bind(this));
   });
 };
@@ -118,7 +117,6 @@ Slider.prototype.flatAnimate = async function () {
  */
 Slider.prototype.completeAnimate = function () {
   this.count++;
-  console.log(this.count,this.slice_num);
   if (this.count >= this.slice_num) {
     //所有切块都已完成
     this.count = 0;
