@@ -1,12 +1,13 @@
 function Slider(options) {
   this.el = options.el;
   this.container_width = parseInt(getComputedStyle(this.el).width); // 计算外层容器的总宽度
+  this.container_height = parseInt(getComputedStyle(this.el).height); // 计算外层容器的总高度
   this.slice_num = options.slice_num || 1; //切成几份
-  this.time = options.timer || 5000; //默认5秒轮播一次
+  this.time = options.time || 5; //默认5秒轮播一次
   this.index = 0;
   this.transition_time = options.transition_time || 0.25; //动画时间
-  this.transition_delay = options.transition_delay || 0.2; //间隔时间
-  this.mode = options.mode || "flat";
+  this.transition_delay = options.transition_delay || 0.25; //间隔时间
+  this.mode = options.mode || 'flat';
   this.init();
   this.count = 0;
 }
@@ -53,22 +54,22 @@ Slider.prototype.autoScroll = function () {
 
     const src = $('img', this.eles[index])[0].getAttribute('src');
 
-    const render = this.mode + "Render";  //获取渲染函数
+    const render = this.mode + 'Render'; //获取渲染函数
 
-    const animateFun = this.mode + "Animate"; // 获取动画函数
+    const animateFun = this.mode + 'Animate'; // 获取动画函数
 
     this[render](src);
 
     this[animateFun](); //执行动画
   }
-  setInterval(Handler.bind(this), this.time);
+  this.Handler = Handler.bind(this);
+  this.Handler();
 };
 
 /**
  *  渲染图形
  */
 Slider.prototype.flatRender = function (src) {
-
   this.clearHtml();
 
   let html = '';
@@ -101,7 +102,94 @@ Slider.prototype.flatRender = function (src) {
 };
 
 /**
- * 执行动画
+ * 渲染3d图形
+ */
+Slider.prototype.cubeRender = function () {
+  this.clearHtml();
+
+  let html = '';
+
+  const current_img = $('img', this.eles[this.index])[0].getAttribute('src'); //当前图片路径
+
+  const next_img = $('img', this.eles[this.new_index])[0].getAttribute('src'); //下一张图片路径
+
+  Array.from(Array(this.slice_num)).forEach((v, i) => {
+    html += `
+      <div class="container" style="left:${i * this.unit_width}px;width:${
+      this.unit_width
+    }px">
+       <div class="wrapper" style="width:${
+         this.unit_width
+       }px;transition:transform linear ${this.transition_time}s">
+            <div class="left"></div>
+            <div class="right" style="transform: translateX(${
+              this.unit_width
+            }px) rotateY(90deg);"></div>
+                    <div class="front"><img src="${current_img}" style="position:absolute;height:100%;width:${
+      100 * this.slice_num
+    }%;left:${-i * this.unit_width}px"/></div>
+                    <div class="up" style="transform: rotateX(90deg) translateZ(${
+                      this.container_height
+                    }px);"><img src="${next_img}" style="position:absolute;height:100%;width:${
+      100 * this.slice_num
+    }%;left:${-i * this.unit_width}px"/></div>
+       </div>
+      </div> 
+    `;
+  });
+
+  const wrapper = document.createElement('DIV');
+
+  wrapper.setAttribute('class', 'hook');
+
+  wrapper.setAttribute('style', 'position:absolute;width:100%;height:100%;');
+
+  wrapper.innerHTML = html;
+
+  this.el.appendChild(wrapper);
+};
+
+/**
+ * 执行3d翻转动画
+ */
+Slider.prototype.cubeAnimate = async function () {
+  const eles = $('.hook .wrapper', this.el);
+  this.eles[this.index].style.display = 'none';
+  let el;
+  await Delay(0);
+  while ((el = eles.shift())) {
+    el.style.transform = `translateZ(${
+      -this.container_height / 2
+    }px) rotateX(-90deg) translateZ(${this.container_height / 2}px)`;
+    this.bindleftAnimate(el);
+    el.addEventListener('transitionend', this.completeAnimate.bind(this));
+    await Delay(this.transition_delay * 1000);
+  }
+};
+
+/**
+ * 绑定左侧动画
+ */
+Slider.prototype.bindleftAnimate = function (el) {
+  const distance = this.unit_width / 4;
+
+  const time = this.transition_time * 1000;
+
+  let t = 0;
+  function updateDom() {
+    el.left.top = 1212;
+
+    setTimeout(() => {
+      t += 20;
+      if (t <= time) {
+        updateDom();
+      }
+    }, t);
+  }
+};
+
+/**
+ * 执行平面动画
  */
 Slider.prototype.flatAnimate = async function () {
   const eles = $('.hook div', this.el);
@@ -115,7 +203,7 @@ Slider.prototype.flatAnimate = async function () {
 /**
  * 执行完毕动画
  */
-Slider.prototype.completeAnimate = function () {
+Slider.prototype.completeAnimate = async function () {
   this.count++;
   if (this.count >= this.slice_num) {
     //所有切块都已完成
@@ -124,13 +212,15 @@ Slider.prototype.completeAnimate = function () {
     this.eles[this.index].style.display = 'none';
     this.index = this.new_index;
     this.clearHtml();
+    await Delay(this.time * 1000);
+    this.Handler();
   }
 };
 
-
-Slider.prototype.clearHtml = function(){
+Slider.prototype.clearHtml = function () {
   const elements = $('.hook', this.el);
-  elements.length > 0 && elements.forEach((element) => {
-    this.el.removeChild(element);
-  });
-}
+  elements.length > 0 &&
+    elements.forEach((element) => {
+      this.el.removeChild(element);
+    });
+};

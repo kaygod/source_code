@@ -22,6 +22,7 @@
         height: 100%;
       }
     </style>
+    <link rel="stylesheet" href="./lib/slider.css" />
   </head>
   <body>
     <div class="main" id="el">
@@ -29,7 +30,7 @@
         <img src="./img/banner.jpg" />
       </div>
       <div class="item">
-        <img src="./img/pt.png" />
+        <img src="./img/pro.png" />
       </div>
     </div>
   </body>
@@ -38,8 +39,10 @@
     new Slider({
       el: document.getElementById('el'),
       slice_num: 6,
-      time: 1500,
-      transition_time: 0.75,
+      mode: 'cube',
+      time: 5,
+      transition_delay: 0.25,
+      transition_time: 1.5,
     });
   </script>
 </html>
