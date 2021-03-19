@@ -5,10 +5,9 @@
     <style>
       .main {
         width: 960px;
-        margin: 0 auto;
-        height: 500px;
+        margin: 100px auto;
+        height: 300px;
         position: relative;
-        overflow: hidden;
       }
       .item {
         position: absolute;
@@ -27,10 +26,13 @@
   <body>
     <div class="main" id="el">
       <div class="item">
-        <img src="./img/banner.jpg" />
+        <img src="./img/111.jpg" />
       </div>
       <div class="item">
-        <img src="./img/pro.png" />
+        <img src="./img/222.jpg" />
+      </div>
+      <div class="item">
+        <img src="./img/333.jpg" />
       </div>
     </div>
   </body>
@@ -40,9 +42,9 @@
       el: document.getElementById('el'),
       slice_num: 6,
       mode: 'cube',
-      time: 5,
+      time: 2,
       transition_delay: 0.25,
-      transition_time: 1.5,
+      transition_time: 0.5,
     });
   </script>
 </html>

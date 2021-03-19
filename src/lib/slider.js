@@ -70,15 +70,18 @@ Slider.prototype.autoScroll = function () {
  *  渲染图形
  */
 Slider.prototype.flatRender = function (src) {
+  
   this.clearHtml();
+
+  this.el.style.overflow = "hidden";
 
   let html = '';
 
   Array.from(Array(this.slice_num)).forEach((v, i) => {
     html += `
        <div style="position:absolute;width:${
-         this.rate * 100
-       }%;height:100%;left:${
+         this.unit_width
+       }px;height:100%;left:${
       i * this.unit_width
     }px;overflow:hidden;top:-100%;transition:top linear ${
       this.transition_time
@@ -124,7 +127,7 @@ Slider.prototype.cubeRender = function () {
             <div class="left"></div>
             <div class="right" style="transform: translateX(${
               this.unit_width
-            }px) rotateY(90deg);"></div>
+            }px) rotateY(90deg);width:${this.container_height}px"></div>
                     <div class="front"><img src="${current_img}" style="position:absolute;height:100%;width:${
       100 * this.slice_num
     }%;left:${-i * this.unit_width}px"/></div>
@@ -171,21 +174,28 @@ Slider.prototype.cubeAnimate = async function () {
  * 绑定左侧动画
  */
 Slider.prototype.bindleftAnimate = function (el) {
-  const distance = this.unit_width / 4;
+  const distance = this.unit_width*2.5;
 
   const time = this.transition_time * 1000;
 
-  let t = 0;
-  function updateDom() {
-    el.left.top = 1212;
+  const a = (-4*distance)/(3*time*time);
 
+  const b = (4*distance)/(time*3);
+
+  let t = 0;
+
+  function updateDom() {
+    el.style.left = -1*(a*t*t + b*t) +"px";
     setTimeout(() => {
       t += 20;
       if (t <= time) {
         updateDom();
       }
-    }, t);
+    }, 20);
   }
+
+  updateDom();
+
 };
 
 /**

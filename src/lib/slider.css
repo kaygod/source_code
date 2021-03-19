@@ -4,17 +4,15 @@
 }
 .container {
   position: absolute;
-  perspective: 1000px;
   height: 100%;
-  overflow: hidden;
+  perspective: 1200px;
+  perspective-origin: right bottom;
 }
 .wrapper {
   transform-style: preserve-3d;
-  perspective-origin: right center;
   top: 0;
   position: absolute;
   height: 100%;
-  transform-style: preserve-3d;
 }
 .left,
 .right,
