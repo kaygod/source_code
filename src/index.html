@@ -2,49 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <style>
-      .main {
-        width: 960px;
-        margin: 100px auto;
-        height: 300px;
-        position: relative;
-      }
-      .item {
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        width: 100%;
-      }
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    </style>
-    <link rel="stylesheet" href="./lib/slider.css" />
   </head>
   <body>
+    <div></div>
     <div class="main" id="el">
-      <div class="item">
-        <img src="./img/111.jpg" />
-      </div>
-      <div class="item">
-        <img src="./img/222.jpg" />
-      </div>
-      <div class="item">
-        <img src="./img/333.jpg" />
-      </div>
-    </div>
+          <div class="one"></div>
+          <div class="two"></div>
+    </div> 
   </body>
-  <script src="./lib/slider.js"></script>
+  <script src="./lib/insertsort.js"></script>
   <script>
-    new Slider({
-      el: document.getElementById('el'),
-      slice_num: 6,
-      mode: 'cube',
-      time: 2,
-      transition_delay: 0.25,
-      transition_time: 0.5,
-    });
+    
+    
+
+
   </script>
 </html>
