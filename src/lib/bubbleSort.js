@@ -19,4 +19,4 @@ function bubbleSort(list){
 }
 
 
-console.log(bubbleSort([1,4,6,3,-1,-2,7,5,9,8,22,1,34]));
+console.log(bubbleSort([1,4,6,3,-1,-2,7,5,9,8,22,1,34])); // [-2, -1, 1, 1, 3, 4, 5, 6, 7, 8, 9, 22, 34]

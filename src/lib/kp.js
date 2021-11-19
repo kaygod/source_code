@@ -1,7 +1,7 @@
 /**
  * 快速排序
  */
-function kp(list){
+function quickSort(list){
     function execuate(data){
         if(data.length <= 1){
             return data;
@@ -21,4 +21,4 @@ function kp(list){
     return execuate(list);
 }
 
-console.log(kp([2,1,6,100,-3,3,12,-9,7,2,8,3,22,4,1,6,8]));
+console.log(quickSort([2,1,6,100,-3,3,12,-9,7,2,8,3,22,4,1,6,8]));

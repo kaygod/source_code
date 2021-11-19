@@ -2,19 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <style>
+      *{
+        padding:0;
+        margin:0;
+      }
+    </style>
   </head>
   <body>
-    <div></div>
-    <div class="main" id="el">
-          <div class="one"></div>
-          <div class="two"></div>
-    </div> 
+      
+    <div id="box2" style="height: 200px;width: 200px; border: 1px silver solid;margin: auto;position: relative">
+      <div id="box2-1" style="height: 100px;width: 100px;border: 1px solid silver;position:absolute;right: 0;left: 0;top: 0;bottom:0;margin: auto;line-height: 100px; text-align: center">
+          0
+      </div>
+  </div>
+
+
   </body>
-  <script src="./lib/bubbleSort.js"></script>
   <script>
-    
-    
-
-
+    let count = 0
+    const box2 = document.getElementById('box2')
+    const box2_1 = document.getElementById('box2-1')
+    box2.addEventListener('mouseenter' , function(){
+       box2_1.innerHTML = ++count
+    })
   </script>
 </html>
