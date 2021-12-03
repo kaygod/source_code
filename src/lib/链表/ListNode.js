@@ -5,7 +5,7 @@ class Node {
   }
 }
 
-const node = new Node(-1);
+//const node = new Node(1);
 
 //console.log(node);
 
@@ -28,6 +28,11 @@ class NodeList {
 
 }
 
-module.exports = NodeList;
+//console.log(JSON.stringify(new NodeList([1,2,3,4])));
 
-//console.log(JSON.stringify(new NodeList([1,2,3,4,5,6])));
+
+module.exports = {
+  Node,
+  NodeList
+};
+
