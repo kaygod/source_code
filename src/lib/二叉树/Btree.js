@@ -10,7 +10,7 @@
    
    度为0的节点称之为叶子节点,比如图中的H、E、F、G 都属于叶子节点
 
-   节点的深度: 从根节点到当前节点的唯一路径上的及节点总数.B节点的深度为1.
+   节点的深度: 从根节点到当前节点的唯一路径上的节点总数.B节点的深度为1.
    
    节点的高度：从当前节点到最远叶子节点的路径上的节点总数.B节点的高度为3.
 
@@ -66,7 +66,7 @@ class Btree {
 
     array.forEach((item,index)=>{
 
-      if(item == null){ //非空处理
+      if(item == null){ // 非空处理
         return;
       }
 
@@ -106,5 +106,8 @@ class Btree {
 
 }
 
+module.exports = {
+  Btree
+};
 
-console.log(new Btree([0,1,2,3,4,5,6]));
+// console.log(new Btree([0,1,2,3,4,5,6]));
