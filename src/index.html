@@ -20,11 +20,140 @@
 
   </body>
   <script>
-    let count = 0
-    const box2 = document.getElementById('box2')
-    const box2_1 = document.getElementById('box2-1')
-    box2.addEventListener('mouseenter' , function(){
-       box2_1.innerHTML = ++count
-    })
+      
+
+      /**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+ class Node {
+    constructor(value){
+       this.value = value;
+       this.left = this.right = null;
+    }
+}
+
+
+class Btree {
+   
+   constructor(array){
+      if(!array){
+          array = [array]
+      } 
+      this.transform(array);
+      return this.root;
+   }
+
+   transform(array){
+    
+    const list = [];
+
+    for(var index =0;index<array.length;index++){    
+
+      const item = array[index];
+
+      if(item == null){ // 非空处理
+        list.push(null);
+        continue;
+      }
+
+      const node = new Node(item);
+
+      list.push(node);
+
+      if(!this.root){
+        this.root = node;
+        continue;
+      }
+      // 得到当前节点所处的层数
+      const layer = Math.floor(Math.log2(index + 1));
+      // 当前节点所在层数的首元素的索引
+      const first_index = Math.pow(2,layer) - 1;
+      // 父节点在其层处于第几个位置
+      const parent_position = Math.floor((index - first_index)/2);
+      // 父节点的层数
+      const parent_layer = layer -1;
+      // 父节点所在层数的首元素的索引
+      const parent_first_index =  Math.pow(2,parent_layer) - 1;
+      // 父节点的索引值
+      const parent_index = parent_first_index + parent_position;
+      // 父元素的节点
+      const parent_node = list[parent_index];
+  
+      if(parent_node.left == null){
+        parent_node.left = node;
+      }else{
+        parent_node.right = node;
+      }
+    }
+
+    list.length = 0;
+
+  }
+
+}
+
+ function fun(node){
+
+        let result = true;
+        
+        function handler(node){
+
+            if(!node){
+                return 0;
+            }
+
+            const left_height = handler(node.left) + 1; // 左侧高度
+
+            if(!result){
+                return;
+            }
+
+            const right_height = handler(node.right) + 1; // 右侧高度
+
+            if(!result){
+                return;
+            }
+
+            if(Math.abs(left_height - right_height) > 1){
+                result = false;
+            }
+
+            return Math.max(left_height,right_height);
+
+        }
+
+        handler(node);
+        
+        return result;
+
+}
+
+var isBalanced = function(root) {
+    return fun(new Btree(root));
+};
+
+ console.log(isBalanced([1,2,2,3,3,null,null,4,4]))
+
   </script>
 </html>

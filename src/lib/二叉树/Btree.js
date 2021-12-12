@@ -67,6 +67,7 @@ class Btree {
     array.forEach((item,index)=>{
 
       if(item == null){ // 非空处理
+        list.push(null);
         return;
       }
 
@@ -107,7 +108,8 @@ class Btree {
 }
 
 module.exports = {
-  Btree
+  Btree,
+  Node
 };
 
 // console.log(new Btree([0,1,2,3,4,5,6]));
