@@ -9,10 +9,10 @@
 <script>
     function senMsg(){
       const $parent = window.parent;
-      $parent && $parent.postMessage("我是子应用发过来的消息","*");
+      $parent && $parent.postMessage({event:"message",payload:{msg:"我是子应用发过来的消息"}},"*");
     }
     window.addEventListener("message",(e)=>{
-       alert(e.data)
+       alert(e.data.payload.msg)
     })
 </script>
  </html>
