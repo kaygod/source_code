@@ -3,8 +3,16 @@
  </head>
   <body>
      <div>
-        hello world
+            <button onclick="senMsg()">给父应用发消息</button>
      </div>
  </body>
-
+<script>
+    function senMsg(){
+      const $parent = window.parent;
+      $parent && $parent.postMessage("我是子应用发过来的消息","*");
+    }
+    window.addEventListener("messgae",(e)=>{
+       alert(e.data)
+    })
+</script>
  </html>
