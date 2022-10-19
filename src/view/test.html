@@ -4,6 +4,7 @@
   <body>
      <div>
             <button onclick="senMsg()">给父应用发消息</button>
+            <div id="child"></div>
      </div>
  </body>
 <script>
@@ -12,7 +13,16 @@
       $parent && $parent.postMessage({event:"message",payload:{msg:"我是子应用发过来的消息"}},"*");
     }
     window.addEventListener("message",(e)=>{
-       alert(e.data.payload.msg)
+       alert(e.data.payload.msg);
+       localStorage.setItem("token",e.data.payload.msg);
     })
+    
+   setInterval(function(){
+      const value = localStorage.getItem("token");
+      if(value){
+        child.textContent = value;
+      }
+   },6000)
+  
 </script>
  </html>
